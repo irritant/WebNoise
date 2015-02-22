@@ -46,6 +46,7 @@ function WebNoise(context) {
 
 	this.configureNode = function(options) {
 
+		options = options || {};
 		var bufferSize = parseInt(options.bufferSize) || 256;
 		var inputChannels = parseInt(options.inputChannels) || 1;
 		var outputChannels = parseInt(options.outputChannels) || 1;
