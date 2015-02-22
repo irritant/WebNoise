@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>WebNoise Demo</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		<!-- Noise generator -->
+		<script type="text/javascript" src="../src/web-noise.js"></script>
+
+		<!-- Page Script -->
+		<script type="text/javascript">
+			window.addEventListener('load', function(e) {
+
+				// Obtain a new audio context:
+				var context = null;
+				if (typeof window.AudioContext != 'undefined') {
+					context = new AudioContext();
+				} else if (typeof window.webkitAudioContext != 'undefined') {
+					context = new webkitAudioContext();
+				}
+
+				if (!context) {
+					console.log('Web Audio API is not supported.');
+					return;
+				}
+
+				window.noise = new WebNoise(context);
+				window.noise.configureNode({
+					bufferSize: 256,
+					inputChannels: 1,
+					outputChannels: 1
+				});
+
+				// Configure mouse event listeners:
+				document.getElementById('noise-trigger').addEventListener('mousedown', function(e) {
+					e.preventDefault();
+					window.noise.node.connect(window.noise.context.destination);
+				});
+
+				document.getElementById('noise-trigger').addEventListener('mouseup', function(e) {
+					e.preventDefault();
+					window.noise.node.disconnect(window.noise.context.destination);
+				});
+
+				document.getElementById('block-size').addEventListener('input', function(e) {
+					window.noise.blockSize(this.value);
+				});
+
+			});
+		</script>
+
+		<!-- Styles -->
+		<style>
+			body {
+				font-family: Helvetica, Arial, sans-serif;
+			}
+
+			a {
+				text-decoration: none;
+				color: #0000FF;
+			}
+
+			a:hover {
+				text-decoration: underline;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>WebNoise</h1>
+		<p>A noise generator for WebAudio.</p>
+		<p><a href="https://github.com/irritant/WebNoise">https://github.com/irritant/WebNoise</a></p>
+		<p><button id="noise-trigger">Click &amp; Hold</button></p>
+		<p></label>Block Size</label>&nbsp;&nbsp;<input id="block-size" type="range" min="1" max="256" value="1"></p>
+	</body>
+</html>
